@@ -33,7 +33,7 @@ export const remarkToc: Plugin<[RemarkTocOptions?], Root> = (
     maxDepth: 4,
     skipLevels: [1],
     skipParents: [],
-  }
+  },
 ) => {
   return (tree, file) => {
     // structured toc
@@ -43,7 +43,7 @@ export const remarkToc: Plugin<[RemarkTocOptions?], Root> = (
     const slugger = new GithubSlugger();
 
     const createEntry = (node: Heading, depth: number): TocEntry => {
-      let attributes = (node.data || {}) as TocEntry["attributes"];
+      const attributes = (node.data || {}) as TocEntry["attributes"];
       const value = toString(node, { includeImageAlt: false });
       return {
         depth,
@@ -55,7 +55,7 @@ export const remarkToc: Plugin<[RemarkTocOptions?], Root> = (
     };
 
     visit(tree, "heading", (node: Heading, _index, parent) => {
-      let depth = node.depth;
+      const depth = node.depth;
 
       if (!parent || typeof _index === "undefined") return;
       if (depth > options.maxDepth) return CONTINUE;
@@ -81,6 +81,7 @@ export const remarkToc: Plugin<[RemarkTocOptions?], Root> = (
         }
       }
       parentNode.push(entry);
+      return CONTINUE;
     });
     // Expose TOC data via vfile.data
     file.data.toc = toc;
